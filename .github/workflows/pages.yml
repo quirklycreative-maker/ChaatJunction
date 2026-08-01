@@ -21,17 +21,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Mirror verified production site
-        run: |
-          mkdir -p _site
-          wget --mirror --page-requisites --convert-links --adjust-extension \
-            --no-host-directories --directory-prefix=_site \
-            https://chaat-junction-uae-concept.quirkly.chatgpt.site/
-          touch _site/.nojekyll
+      - name: Check out repository
+        uses: actions/checkout@v4
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: github-pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
