@@ -16,12 +16,12 @@ for (const route of routes) {
   let html = await response.text();
 
   html = html
-    .replaceAll("/_vinext/image?url=%2Ffood-spice.png&amp;w=640&amp;q=75", `${projectPath}/food-spice.png`)
-    .replaceAll("/_vinext/image?url=%2Ffood-joy.png&amp;w=640&amp;q=75", `${projectPath}/food-joy.png`)
-    .replaceAll("/_vinext/image?url=%2Ffood-heritage.png&amp;w=640&amp;q=75", `${projectPath}/food-heritage.png`)
-    .replaceAll("/_vinext/image?url=%2Ffood-chatore.png&amp;w=640&amp;q=75", `${projectPath}/food-chatore.png`)
-    .replaceAll('"/', `"${projectPath}/`)
-    .replaceAll("'/", `'${projectPath}/`)
+    .replaceAll(
+      /\/_vinext\/image\?url=%2F([^&"']+)&amp;w=\d+&amp;q=\d+/g,
+      (_match, encodedPath) => `/${decodeURIComponent(encodedPath)}`,
+    )
+    .replaceAll(/"\/(?!>)/g, `"${projectPath}/`)
+    .replaceAll(/'\/(?!>)/g, `'${projectPath}/`)
     .replaceAll(`${projectPath}/${projectPath.slice(1)}/`, `${projectPath}/`);
 
   const destination = route === "/" ? output : new URL(`.${route}/`, output);
